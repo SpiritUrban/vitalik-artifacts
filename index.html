@@ -56,6 +56,12 @@
     .grid{display:grid;grid-template-columns:repeat( auto-fit, minmax(240px,1fr) );gap:var(--grid-gap)}
     .card{display:flex;flex-direction:column;background:var(--panel);border-radius:var(--card-radius);box-shadow:var(--shadow);overflow:hidden}
     .cover{aspect-ratio:16/9;background:#091018;display:block;object-fit:cover}
+    .cover {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+    }
+
     .content{padding:12px 12px 14px}
     .title{font-weight:800;margin:4px 0}
     .desc{color:var(--muted);margin:4px 0 10px}
@@ -160,12 +166,31 @@
     function buildTags(){
       const box = document.getElementById('tags');
       box.innerHTML = '';
+      
+      // Add 'All' button
       const all = document.createElement('span');
-      all.className='chip'; all.textContent='Все'; all.dataset.active = !state.activeTag;
-      all.onclick=()=>{state.activeTag=null; render()};
+      all.className = 'chip';
+      all.textContent = 'Все';
+      all.dataset.active = !state.activeTag;
+      all.onclick = () => {
+        state.activeTag = null;
+        buildTags();
+        render();
+      };
       box.appendChild(all);
-      [...state.tags].sort((a,b)=>a.localeCompare(b,'ru')).forEach(t=>{
-        const el = document.createElement('span'); el.className='chip'; el.textContent=t; el.dataset.active = state.activeTag===t; el.onclick=()=>{state.activeTag = state.activeTag===t? null : t; buildTags(); render();}; box.appendChild(el);
+      
+      // Add tag buttons
+      [...state.tags].sort((a,b) => a.localeCompare(b, 'ru')).forEach(tag => {
+        const el = document.createElement('span');
+        el.className = 'chip';
+        el.textContent = tag;
+        el.dataset.active = state.activeTag === tag;
+        el.onclick = () => {
+          state.activeTag = state.activeTag === tag ? null : tag;
+          render();
+          buildTags(); // Rebuild tags to update active states
+        };
+        box.appendChild(el);
       });
     }
 
