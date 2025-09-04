@@ -1,0 +1,18 @@
+{
+    "artifacts": [
+        {
+            "slug": "youtube-subs-yt-dlp",
+            "title": "🔥 Инструкция: скачивание субтитров с YouTube (RU/EN) через yt-dlp",
+            "description": "Пошаговый рецепт: установка yt-dlp, экспорт cookies, команды для видео и плейлистов с субтитрами (рус/англ). Решение проблем DPAPI и лимитов.",
+            "date": "2025-09-04",
+            "tags": [
+                "yt-dlp",
+                "youtube",
+                "subtitles",
+                "howto"
+            ],
+            "cover": "artifacts/youtube-subs-yt-dlp/cover.png",
+            "link": "artifacts/youtube-subs-yt-dlp/"
+        }
+    ]
+}

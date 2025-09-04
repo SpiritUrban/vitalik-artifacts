@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VitalikArtifacts — Живая коллекция артефактов</title>
+  <meta name="description" content="VitalikArtifacts — живая коллекция артефактов Виталика: схемы, куски кода, ритуальные скетчи, PDF, демки и прочее." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🜁</text></svg>">
+  <style>
+    :root {
+      --bg: #0b0e12;      /* тёмный фон по умолчанию */
+      --panel: #12161c;
+      --text: #e8ecf1;
+      --muted: #9aa6b2;
+      --acc: #49f2c2;     /* акцент: мятная плазма */
+      --grid-gap: 14px;
+      --card-radius: 16px;
+      --shadow: 0 2px 20px rgba(0,0,0,.25);
+    }
+    [data-theme="light"]{
+      --bg:#f6f8fb; --panel:#fff; --text:#0b0e12; --muted:#54606d; --acc:#1e90ff;
+      --shadow: 0 4px 14px rgba(10,35,66,.08);
+    }
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+    a{color:inherit}
+    .wrap{max-width:1200px;margin:0 auto;padding:22px}
+
+    /* ======= Hero/Topbar ======= */
+    .top{
+      display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:18px
+    }
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}
+    .brand .logo{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,var(--acc),transparent 60%),var(--panel);box-shadow:var(--shadow)}
+    .brand small{color:var(--muted);font-weight:600}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav a{padding:8px 12px;border-radius:10px;background:var(--panel);color:var(--text);text-decoration:none;box-shadow:var(--shadow);opacity:.95}
+    .nav a:hover{transform:translateY(-1px)}
+
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center;margin:8px 0 18px}
+    @media (max-width:800px){.hero{grid-template-columns:1fr}}
+    .hero .blurb{background:var(--panel);padding:16px 18px;border-radius:18px;box-shadow:var(--shadow)}
+    .hero h1{margin:0 0 8px;font-size:1.6rem}
+    .hero p{margin:0;color:var(--muted)}
+    .cta{display:flex;gap:10px;margin-top:12px}
+    .btn{border:0;border-radius:12px;padding:10px 14px;background:var(--acc);color:#05141b;font-weight:800;text-decoration:none;box-shadow:var(--shadow)}
+    .ghost{background:transparent;outline:1.5px solid color-mix(in srgb, var(--acc) 60%, transparent)}
+
+    /* ======= Controls ======= */
+    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 16px}
+    .controls input,.controls select{background:var(--panel);color:var(--text);border:0;padding:10px 12px;border-radius:12px;box-shadow:var(--shadow)}
+    .chip{padding:6px 10px;border-radius:999px;background:var(--panel);cursor:pointer;user-select:none}
+    .chip[data-active="true"]{outline:2px solid var(--acc)}
+
+    /* ======= Grid ======= */
+    .grid{display:grid;grid-template-columns:repeat( auto-fit, minmax(240px,1fr) );gap:var(--grid-gap)}
+    .card{display:flex;flex-direction:column;background:var(--panel);border-radius:var(--card-radius);box-shadow:var(--shadow);overflow:hidden}
+    .cover{aspect-ratio:16/9;background:#091018;display:block;object-fit:cover}
+    .content{padding:12px 12px 14px}
+    .title{font-weight:800;margin:4px 0}
+    .desc{color:var(--muted);margin:4px 0 10px}
+    .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.9em}
+    .tags{display:flex;gap:6px;flex-wrap:wrap}
+    .tag{font-size:.75em;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.06)}
+    .card a.more{margin:10px 12px 12px;align-self:flex-start}
+
+    footer{color:var(--muted);text-align:center;margin:26px 0 12px}
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🜁</div>
+        <div>
+          VitalikArtifacts<br>
+          <small>живой каталог артефактов</small>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="https://vitalikbooks.example" target="_blank" rel="noopener">📚 Books</a>
+        <a href="https://vitaliktools.example" target="_blank" rel="noopener">🧰 Tools</a>
+        <a id="theme" href="#" onclick="toggleTheme(event)">🌓 Тема</a>
+      </nav>
+    </div>
+
+    <!-- компактный hero-маркетинг -->
+    <section class="hero" aria-label="about">
+      <div class="blurb">
+        <h1>Артефакты процесса → в открытый эфир</h1>
+        <p>Куски кода, прототипы, скетчи, PDF, схемы и редкие находки. Всё, что рождается в потоке — попадает сюда. Быстро. Честно. Полезно.</p>
+        <div class="cta">
+          <a class="btn" href="https://github.com/yourname/vitalikartifacts/issues/new?title=%5BArtifact%5D+">Предложить артефакт</a>
+          <a class="btn ghost" href="#grid">Смотреть коллекцию ↓</a>
+        </div>
+      </div>
+      <div class="blurb">
+        <strong>Как устроено?</strong>
+        <p style="margin:6px 0 0">Одна страница + <code>artifacts.json</code>. Вы описываете артефакты в JSON, а страница рендерит плитки. Без сборок и зависимостей.</p>
+      </div>
+    </section>
+
+    <!-- панель управления -->
+    <div class="controls">
+      <input id="q" type="search" placeholder="Поиск по названию/описанию" oninput="render()"/>
+      <select id="sort" onchange="render()">
+        <option value="new">Сначала новые</option>
+        <option value="old">Сначала старые</option>
+        <option value="az">A → Z</option>
+        <option value="za">Z → A</option>
+      </select>
+      <span id="tags" class="tags"></span>
+      <span id="count" class="chip" title="Количество отфильтрованных"></span>
+    </div>
+
+    <!-- сетка -->
+    <section id="grid" class="grid" aria-live="polite"></section>
+
+    <footer>
+      <div>© <span id="year"></span> Vitalik. На GitHub Pages. Код — <a href="https://github.com/yourname/vitalikartifacts" target="_blank" rel="noopener">репозиторий</a>.</div>
+    </footer>
+  </div>
+
+  <script>
+    // ======= ТЕМА =======
+    const themeKey = 'va_theme';
+    const root = document.documentElement;
+    function applyTheme(t){document.documentElement.setAttribute('data-theme', t)}
+    function toggleTheme(e){ e && e.preventDefault(); const t = (localStorage.getItem(themeKey) || 'dark') === 'dark' ? 'light':'dark'; localStorage.setItem(themeKey,t); applyTheme(t)}
+    applyTheme(localStorage.getItem(themeKey)||'dark');
+
+    // ======= ДАННЫЕ =======
+    const state = { data: [], tags: new Set(), activeTag: null };
+
+    async function load(){
+      try{
+        const res = await fetch('artifacts.json', {cache:'no-store'});
+        if(!res.ok) throw new Error('Не найден artifacts.json');
+        const json = await res.json();
+        // нормализация
+        state.data = (json.artifacts||[]).map(it=>({
+          id: it.id || crypto.randomUUID(),
+          slug: it.slug || (it.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''),
+          title: it.title?.trim()||'Без названия',
+          description: it.description?.trim()||'',
+          date: it.date || new Date().toISOString().slice(0,10),
+          cover: it.cover || '',
+          link: it.link || '',
+          tags: Array.isArray(it.tags)? it.tags : [],
+        }));
+        state.tags = new Set(state.data.flatMap(it=>it.tags||[]));
+        buildTags();
+        render();
+      }catch(err){
+        document.querySelector('#grid').innerHTML = `<div class="card"><div class="content"><div class="title">Нет данных</div><div class="desc">${err.message}. Создайте файл <code>artifacts.json</code> в корне репозитория. Ниже — шаблон.</div></div></div>`;
+      }
+    }
+
+    function buildTags(){
+      const box = document.getElementById('tags');
+      box.innerHTML = '';
+      const all = document.createElement('span');
+      all.className='chip'; all.textContent='Все'; all.dataset.active = !state.activeTag;
+      all.onclick=()=>{state.activeTag=null; render()};
+      box.appendChild(all);
+      [...state.tags].sort((a,b)=>a.localeCompare(b,'ru')).forEach(t=>{
+        const el = document.createElement('span'); el.className='chip'; el.textContent=t; el.dataset.active = state.activeTag===t; el.onclick=()=>{state.activeTag = state.activeTag===t? null : t; buildTags(); render();}; box.appendChild(el);
+      });
+    }
+
+    // ======= РЕНДЕР =======
+    function render(){
+      const q = document.getElementById('q').value.trim().toLowerCase();
+      const sort = document.getElementById('sort').value;
+      let list = [...state.data];
+      if(q){ list = list.filter(it=> (it.title+"\n"+it.description).toLowerCase().includes(q)); }
+      if(state.activeTag){ list = list.filter(it=> (it.tags||[]).includes(state.activeTag)); }
+      list.sort((a,b)=>{
+        if(sort==='new') return (b.date||'').localeCompare(a.date||'');
+        if(sort==='old') return (a.date||'').localeCompare(b.date||'');
+        if(sort==='az') return a.title.localeCompare(b.title,'ru');
+        if(sort==='za') return b.title.localeCompare(a.title,'ru');
+        return 0;
+      });
+      document.getElementById('count').textContent = `Найдено: ${list.length}`;
+
+      const grid = document.getElementById('grid');
+      grid.innerHTML = list.map(cardHTML).join('');
+    }
+
+    function cardHTML(it){
+      const cover = it.cover ? `<img class="cover" src="${it.cover}" alt="${escapeHtml(it.title)}" loading="lazy">` : `<div class="cover"></div>`;
+      const clickUrl = it.link || (it.slug ? `./artifacts/${it.slug}/` : '#');
+      return `
+      <article class="card" tabindex="0" aria-label="${escapeHtml(it.title)}">
+        <a href="${clickUrl}">${cover}</a>
+        <div class="content">
+          <div class="meta"><span>${formatDate(it.date)}</span><span>${(it.tags||[]).slice(0,3).map(t=>`<span class='tag'>${escapeHtml(t)}</span>`).join('')}</span></div>
+          <div class="title">${escapeHtml(it.title)}</div>
+          <div class="desc">${escapeHtml(it.description)}</div>
+          ${ it.link ? `<a class="more" href="${it.link}">Открыть →</a>` : ''}
+        </div>
+      </article>`;
+    }
+
+    const months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    function formatDate(iso){ if(!iso) return '';
+      const d = new Date(iso);
+      if(Number.isNaN(d.getTime())) return iso;
+      return `${String(d.getDate()).padStart(2,'0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+    function escapeHtml(s){return (s||'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
+    // ======= BOOT =======
+    document.getElementById('year').textContent = new Date().getFullYear();
+    load();
+  </script>
+
+  <!-- =====================
+       ШАБЛОН artifacts.json
+       =====================
+       ⚠️ Создайте В КОРНЕ файл artifacts.json
+       Пример содержимого ниже (скопируйте в отдельный файл artifacts.json):
+
+  {
+    "artifacts": [
+      {
+        "id": "a-demo-001",
+        "slug": "uhélyant-logo-evolution",
+        "title": "UHÉLYANT — эволюция логотипа",
+        "description": "Серия эскизов и финальный SVG. Путь от шумных форм к чистой геометрии.",
+        "date": "2025-09-03",
+        "tags": ["design","svg","brand"],
+        "cover": "artifacts/uhelyant-logo/cover.jpg",
+        "link": "artifacts/uhelyant-logo/"
+      },
+      {
+        "slug": "njs-cli-scan-module",
+        "title": "n.js: скан модулей (демо JSON → README)",
+        "description": "Пример генерации README на основе структуры модуля. Лёгкий скрипт + образец входного JSON.",
+        "date": "2025-09-02",
+        "tags": ["nivora","cli","automation"],
+        "cover": "artifacts/njs-scan/cover.png",
+        "link": "artifacts/njs-scan/"
+      },
+      {
+        "slug": "micro-cnc-probe",
+        "title": "Микро-ЧПУ: проба пера",
+        "description": "Фото прототипа, BOM, схема питания, тестовые gcode.",
+        "date": "2025-08-28",
+        "tags": ["hardware","cnc","lab"],
+        "cover": "artifacts/micro-cnc/cover.jpg",
+        "link": "artifacts/micro-cnc/"
+      }
+    ]
+  }
+
+  -->
+
+  <!-- =====================
+       СТРУКТУРА РЕПОЗИТОРИЯ
+       =====================
+
+  / (корень gh-pages)
+  ├─ index.html              ← этот файл
+  ├─ artifacts.json          ← данные каталога
+  ├─ /artifacts/             ← папка артефактов (по slug'ам)
+  │   ├─ uhelyant-logo/
+  │   │   ├─ index.html      ← страница артефакта (можно простая)
+  │   │   ├─ cover.jpg       ← обложка
+  │   │   └─ files/...       ← вложения: pdf, zip, код
+  │   ├─ njs-scan/
+  │   │   ├─ index.html
+  │   │   └─ cover.png
+  │   └─ micro-cnc/
+  │       ├─ index.html
+  │       └─ cover.jpg
+  └─ /assets/ (необязательно) — иконки/картинки общего назначения
+
+  -->
+
+  <!-- =====================
+       ШАБЛОН СТРАНИЦЫ АРТЕФАКТА
+       =====================
+       Скопируйте этот сниппет как artifacts/<slug>/index.html и правьте по месту.
+
+  <!--
+  <!doctype html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Название артефакта — VitalikArtifacts</title>
+  <style>
+    body{margin:0;padding:28px;background:#0b0e12;color:#e8ecf1;font:16px/1.6 system-ui}
+    a{color:#49f2c2}
+    .wrap{max-width:860px;margin:auto}
+    .crumbs{opacity:.7}
+    .hero img{max-width:100%;border-radius:14px}
+    .box{background:#12161c;border-radius:16px;padding:16px 18px;margin:16px 0}
+  </style>
+  <div class="wrap">
+    <div class="crumbs"><a href="../../">← ко всем артефактам</a></div>
+    <h1>Название артефакта</h1>
+    <div class="hero"><img src="cover.jpg" alt=""></div>
+    <div class="box">
+      <h3>Коротко</h3>
+      <p>1–3 абзаца: что это, зачем, чем полезно.</p>
+    </div>
+    <div class="box">
+      <h3>Файлы</h3>
+      <ul>
+        <li><a href="files/demo.pdf">demo.pdf</a></li>
+        <li><a href="files/archive.zip">archive.zip</a></li>
+      </ul>
+    </div>
+    <div class="box"><small>© Vitalik • обновлено 2025‑09‑04</small></div>
+  </div>
+  -->
+
+</body>
+</html>
