@@ -1,29 +1,316 @@
+<!-- FILE: artifacts/youtube-subs-yt-dlp/index.html -->
 <!doctype html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Название артефакта — VitalikArtifacts</title>
-<style>
-  body{margin:0;padding:28px;background:#0b0e12;color:#e8ecf1;font:16px/1.6 system-ui}
-  a{color:#49f2c2}
-  .wrap{max-width:860px;margin:auto}
-  .crumbs{opacity:.7}
-  .hero img{max-width:100%;border-radius:14px}
-  .box{background:#12161c;border-radius:16px;padding:16px 18px;margin:16px 0}
-</style>
-<div class="wrap">
-  <div class="crumbs"><a href="../../">← ко всем артефактам</a></div>
-  <h1>Название артефакта</h1>
-  <div class="hero"><img src="cover.jpg" alt=""></div>
-  <div class="box">
-    <h3>Коротко</h3>
-    <p>1–3 абзаца: что это, зачем, чем полезно.</p>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Субтитры YouTube через yt-dlp — VitalikArtifacts</title>
+  <meta name="description"
+    content="Пошаговый гайд: как скачать русские и английские субтитры с YouTube при помощи yt-dlp. Обход DPAPI, cookies.txt, плейлисты, паузы, ретраи." />
+  <style>
+    :root {
+      --bg: #0b0e12;
+      --panel: #12161c;
+      --text: #e8ecf1;
+      --muted: #9aa6b2;
+      --acc: #49f2c2;
+      --shadow: 0 2px 20px rgba(0, 0, 0, .25)
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto
+    }
+
+    a {
+      color: var(--acc);
+      text-decoration: none
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 26px
+    }
+
+    .crumbs {
+      opacity: .75;
+      margin-bottom: 10px
+    }
+
+    .hero img {
+      max-width: 100%;
+      border-radius: 14px;
+      box-shadow: var(--shadow)
+    }
+
+    h1 {
+      margin: .2em 0 .6em
+    }
+
+    h2 {
+      margin: 1.4em 0 .4em
+    }
+
+    h3 {
+      margin: 1em 0 .4em
+    }
+
+    .box {
+      background: var(--panel);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin: 14px 0;
+      box-shadow: var(--shadow)
+    }
+
+    .meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--muted)
+    }
+
+    .tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .tag {
+      font-size: .8em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06)
+    }
+
+    pre {
+      background: #0a1017;
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 12px;
+      padding: 12px;
+      overflow: auto
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, Menlo, monospace;
+      font-size: .95em
+    }
+
+    .callout {
+      border-left: 4px solid var(--acc);
+      padding: 10px 14px;
+      background: #0a1117;
+      border-radius: 10px
+    }
+
+    .toc a {
+      display: block;
+      padding: 6px 0;
+      color: var(--muted)
+    }
+
+    .kbd {
+      border: 1px solid #46515f;
+      border-bottom-width: 3px;
+      padding: .1em .45em;
+      border-radius: 6px;
+      background: #0f141a
+    }
+
+    .btn-copy {
+      float: right;
+      font: 600 12px/1 ui-monospace;
+      letter-spacing: .2px;
+      padding: 6px 9px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: #0f161d;
+      color: #cfe7f5;
+      cursor: pointer
+    }
+
+    .btn-copy:hover {
+      filter: brightness(1.1)
+    }
+
+    .hr {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1), transparent);
+      margin: 18px 0
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="crumbs"><a href="../../">← ко всем артефактам</a></div>
+    <h1>🔥 Инструкция: скачивание субтитров с YouTube (RU/EN) через yt‑dlp</h1>
+    <div class="meta">
+      <div>Обновлено: 04 сентября 2025</div>
+      <div class="tags">
+        <span class="tag">yt-dlp</span>
+        <span class="tag">youtube</span>
+        <span class="tag">subtitles</span>
+        <span class="tag">howto</span>
+      </div>
+    </div>
+
+    <div class="hero box"><img src="cover.png" alt="Обложка: yt-dlp + YouTube субтитры"></div>
+
+    <div class="box toc">
+      <strong>Содержание</strong>
+      <a href="#install">1) Установка</a>
+      <a href="#nightly">2) Обновление до nightly</a>
+      <a href="#cookies">3) Экспорт cookies (обход DPAPI)</a>
+      <a href="#single">4) Команда для одного видео</a>
+      <a href="#playlist">5) Команда для плейлиста</a>
+      <a href="#why">Суть проблемы и технические детали</a>
+      <a href="#result">Итоговое решение</a>
+    </div>
+
+    <div id="install" class="box">
+      <h2>1) Установка yt‑dlp</h2>
+      <h3>Через Chocolatey (Windows)</h3>
+      <button class="btn-copy" data-copy>Copy</button>
+      <pre><code>choco install yt-dlp</code></pre>
+      <div class="callout">Если нет Chocolatey: запусти PowerShell от имени администратора и следуй <a
+          href="https://chocolatey.org/install" target="_blank" rel="noopener">инструкции установки Chocolatey</a>.
+      </div>
+      <div class="hr"></div>
+      <h3>(Опционально) macOS / Linux</h3>
+      <pre><code># macOS (Homebrew)
+brew install yt-dlp
+
+# Debian/Ubuntu
+sudo apt install yt-dlp</code></pre>
+    </div>
+
+    <div id="nightly" class="box">
+      <h2>2) Обновление до nightly</h2>
+      <p>Ночные сборки часто закрывают свежие баги на стороне YouTube.</p>
+      <button class="btn-copy" data-copy>Copy</button>
+      <pre><code>yt-dlp --update-to nightly</code></pre>
+    </div>
+
+    <div id="cookies" class="box">
+      <h2>3) Экспорт cookies (обход DPAPI на Windows)</h2>
+      <p>Встроенный <code>--cookies-from-browser</code> иногда падает из‑за шифрования DPAPI. Стабильная схема:</p>
+      <ol>
+        <li>Установить расширение <strong>Get cookies.txt LOCALLY</strong> (или аналог) в Chrome.</li>
+        <li>Открыть страницу нужного видео на YouTube, залогиниться, подтвердить CONSENT.</li>
+        <li>Сохранить cookies в файл (формат Netscape cookies.txt), например:<br>
+          <code>C:\Users\spiri\OneDrive\Desktop\www.youtube.com_cookies</code>
+        </li>
+      </ol>
+      <div class="callout">Почему так? Файл <code>cookies.txt</code> используется напрямую через флаг
+        <code>--cookies</code>, минуя DPAPI.
+      </div>
+    </div>
+
+    <div id="single" class="box">
+      <h2>4) Команда для одного видео</h2>
+      <button class="btn-copy" data-copy>Copy</button>
+      <pre><code>yt-dlp --skip-download --write-subs --write-auto-sub --sub-langs "ru,en" --convert-subs srt --cookies "C:\Users\spiri\OneDrive\Desktop\www.youtube.com_cookies" --sleep-requests 2 --retries 20 "https://www.youtube.com/watch?v=zch417J0g0Y"</code></pre>
+      <h3>Что делает каждая опция</h3>
+      <ul>
+        <li><code>--skip-download</code> — не качает видео, только субтитры.</li>
+        <li><code>--write-subs</code> — «человеческие» субтитры (если есть).</li>
+        <li><code>--write-auto-sub</code> — авто‑сгенерированные (если нет человеческих).</li>
+        <li><code>--sub-langs "ru,en"</code> — только RU и EN.</li>
+        <li><code>--convert-subs srt</code> — конвертирует в <code>.srt</code>.</li>
+        <li><code>--cookies</code> — берёт твой <code>cookies.txt</code> (обходит DPAPI).</li>
+        <li><code>--sleep-requests</code> / <code>--retries</code> — паузы и повторы, чтобы не упираться в лимиты.</li>
+      </ul>
+      <p><strong>Результат:</strong> В текущей папке появятся файлы субтитров: <code>...ru.srt</code>,
+        <code>...en.srt</code>.
+      </p>
+    </div>
+
+    <div id="playlist" class="box">
+      <h2>5) Команда для плейлиста</h2>
+      <button class="btn-copy" data-copy>Copy</button>
+      <pre><code>yt-dlp --skip-download --write-subs --write-auto-sub --sub-langs "ru,en" --convert-subs srt --cookies "C:\Users\spiri\OneDrive\Desktop\www.youtube.com_cookies" --sleep-requests 2 --retries 20 --sleep-interval 5 --max-sleep-interval 15 --download-archive downloaded.txt "https://www.youtube.com/playlist?list=ID_ТВОЕГО_ПЛЕЙЛИСТА"</code></pre>
+      <ul>
+        <li>Вместо ссылки на ролик — ссылка на <code>/playlist?list=...</code>.</li>
+        <li><code>--sleep-interval</code> / <code>--max-sleep-interval</code> — случайная пауза между видео (снижает
+          риск блокировок).</li>
+        <li><code>--download-archive downloaded.txt</code> — помечает уже обработанные видео, при повторном запуске
+          пропускает их.</li>
+      </ul>
+    </div>
+
+    <div id="why" class="box">
+      <h2>Суть проблемы и технические детали</h2>
+      <ul>
+        <li><strong>Антибот‑механизмы YouTube</strong>: облачные IP часто ловят <code>429 Too Many Requests</code>.</li>
+        <li><strong>Изменение API субтитров</strong>: эндпоинт <code>timedtext</code> требует токен из плеера; без него
+          запросы режутся.</li>
+        <li><strong>Куки/сеанс</strong>: список <code>captionTracks</code> часто отдаётся только при валидных
+          пользовательских cookies.</li>
+        <li><strong>YouTube Data API</strong> не позволяет скачивать субтитры чужих видео.</li>
+      </ul>
+      <p><strong>Почему yt‑dlp</strong>: инструмент активно поддерживается и быстро подстраивается под изменения
+        YouTube. Для корректной работы часто нужен актуальный nightly‑билд.</p>
+    </div>
+
+    <div id="result" class="box">
+      <h2>Итоговое решение</h2>
+      <ol>
+        <li>Установить/обновить yt‑dlp до nightly.</li>
+        <li>Экспортировать cookies браузера в <code>cookies.txt</code> (формат Netscape).</li>
+        <li>Использовать флаг <code>--cookies "путь\к\файлу"</code> в командах.</li>
+        <li>Для одиночного видео и плейлистов — использовать команды выше (с паузами/ретраями).</li>
+      </ol>
+      <div class="callout">Готово. Это стабильный и воспроизводимый способ вытащить .srt на RU/EN даже при свежих
+        изменениях на стороне YouTube.</div>
+    </div>
+
+    <div id="files" class="box">
+      <h3>Файлы</h3>
+      <ul>
+        <li>
+          doc.md —
+          <a href="files/doc.html">Смотреть</a>
+          <a href="files/doc.md" download style="margin-left:10px">Скачать</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="box" style="text-align:center;color:var(--muted)">
+      © Vitalik • Артефакт: <code>youtube-subs-yt-dlp</code>
+    </div>
+
   </div>
-  <div class="box">
-    <h3>Файлы</h3>
-    <ul>
-      <li><a href="files/demo.pdf">demo.pdf</a></li>
-      <li><a href="files/archive.zip">archive.zip</a></li>
-    </ul>
-  </div>
+
+
+
+
   <div class="box"><small>© Vitalik • обновлено 2025‑09‑04</small></div>
-</div>
+  </div>
+
+  <script>
+    // Кнопки Copy для всех ближайших после них <pre><code>
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      const pre = btn.nextElementSibling;
+      btn.addEventListener('click', async () => {
+        try {
+          const code = pre?.querySelector('code')?.innerText || '';
+          await navigator.clipboard.writeText(code);
+          const old = btn.textContent; btn.textContent = 'Copied';
+          setTimeout(() => btn.textContent = old, 1200);
+        } catch (e) { btn.textContent = 'Error'; setTimeout(() => btn.textContent = 'Copy', 1200); }
+      });
+    });
+  </script>
+</body>
+
+</html>
